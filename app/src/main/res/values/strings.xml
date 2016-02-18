@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Cans Counter</string>
+    <string name="search_user">Search your user</string>
+</resources>
