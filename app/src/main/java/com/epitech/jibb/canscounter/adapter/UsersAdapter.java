@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.epitech.jibb.canscounter.R;
 import com.epitech.jibb.canscounter.models.User;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class UsersAdapter extends ArrayAdapter<User> {

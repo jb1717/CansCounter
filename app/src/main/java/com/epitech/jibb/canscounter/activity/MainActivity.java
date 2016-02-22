@@ -1,15 +1,17 @@
 package com.epitech.jibb.canscounter.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.epitech.jibb.canscounter.R;
 import com.epitech.jibb.canscounter.adapter.UsersAdapter;
@@ -64,6 +66,20 @@ public class MainActivity extends AppCompatActivity {
                         }
                         UsersAdapter adapter = new UsersAdapter(MainActivity.this, users);
                         _userListView.setAdapter(adapter);
+                        _userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                                Bundle bundle = new Bundle();
+                                try {
+                                    bundle.putString("id", _users.getJSONObject(position).getString("_id"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
