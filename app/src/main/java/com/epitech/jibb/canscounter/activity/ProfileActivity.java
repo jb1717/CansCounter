@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +32,14 @@ public class ProfileActivity extends AppCompatActivity {
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             try {
                 ListView history;
+                TextView text_cans = (TextView) findViewById(R.id.nb_cans_textView);
                 JSONObject data = response.getJSONObject("data");
                 TextView username = (TextView) findViewById(R.id.username);
                 username.setText(data.getString("name"));
                 JSONArray cans = data.getJSONArray("cans");
                 ArrayList<String> cans_list = new ArrayList<>();
                 history = (ListView) findViewById(R.id.cans_history);
+                text_cans.setText(String.valueOf(cans.length()));
                 for (int i = 0; i < cans.length(); ++i) {
                     cans_list.add(cans.getJSONObject(i).getString("date"));
                 }
@@ -91,6 +94,14 @@ public class ProfileActivity extends AppCompatActivity {
                     }
 
                 });
+            }
+        });
+
+        Button back_button = (Button) findViewById(R.id.back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

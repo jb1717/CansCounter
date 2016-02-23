@@ -14,7 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:textColor="#fff"
         android:id="@+id/username"
         android:layout_alignBottom="@+id/user_fav_can"
         android:layout_alignParentStart="true" />
@@ -43,10 +45,24 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/button"
+        android:layout_marginStart="10dp"
+        android:clickable="true"
+        android:id="@+id/back_button"
         android:background="@drawable/ic_arrow_back_white_24dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:contextClickable="false" />
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center"
+        android:text=""
+        android:textSize="30sp"
+        android:id="@+id/nb_cans_textView"
+        android:textColor="#fff"
+        android:layout_above="@+id/username"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

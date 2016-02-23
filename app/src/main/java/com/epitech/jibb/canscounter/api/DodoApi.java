@@ -9,7 +9,7 @@ import android.util.Log;
 public class DodoApi {
 
     private static AsyncHttpClient _client = new AsyncHttpClient();
-    private static String _url = "http://10.10.252.167:7070/";
+    private static String _url = "http://www.dorianamouroux.fr:7070/";
 
     public static void getUsers(JsonHttpResponseHandler callback) {
         _client.get(_url + "user", callback);
