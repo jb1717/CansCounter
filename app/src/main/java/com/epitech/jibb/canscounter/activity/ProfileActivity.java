@@ -1,11 +1,15 @@
 package com.epitech.jibb.canscounter.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.epitech.jibb.canscounter.R;
 import com.epitech.jibb.canscounter.api.DodoApi;
@@ -22,7 +26,33 @@ import cz.msebera.android.httpclient.Header;
 public class ProfileActivity extends AppCompatActivity {
 
     private String TAG = "INFO_ProfileActivity";
-    private ListView history;
+    private JsonHttpResponseHandler getUserHandler = new JsonHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            try {
+                ListView history;
+                JSONObject data = response.getJSONObject("data");
+                TextView username = (TextView) findViewById(R.id.username);
+                username.setText(data.getString("name"));
+                JSONArray cans = data.getJSONArray("cans");
+                ArrayList<String> cans_list = new ArrayList<>();
+                history = (ListView) findViewById(R.id.cans_history);
+                for (int i = 0; i < cans.length(); ++i) {
+                    cans_list.add(cans.getJSONObject(i).getString("date"));
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, cans_list);
+                history.setAdapter(adapter);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            Log.i(TAG, "Can't get the list of users: " + statusCode + " - " + String.valueOf(errorResponse));
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,33 +65,33 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
 
         Bundle params = getIntent().getExtras();
-        String id = params.getString("id");
+        final String id = params.getString("id");
 
-        DodoApi.getUser(id, new JsonHttpResponseHandler() {
+        DodoApi.getUser(id, getUserHandler);
+
+        FloatingActionButton add_button = (FloatingActionButton) findViewById(R.id.add_cans_button);
+        add_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    TextView username = (TextView) findViewById(R.id.username);
-                    username.setText(data.getString("name"));
-                    JSONArray cans = data.getJSONArray("cans");
-                    ArrayList<String> cans_list = new ArrayList<>();
-                    history = (ListView) findViewById(R.id.cans_history);
-                    for (int i = 0; i < cans.length(); ++i) {
-                        cans_list.add(cans.getJSONObject(i).getString("date"));
+            public void onClick(View v) {
+                DodoApi.addOneCan(id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "One more can...";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                        DodoApi.getUser(id, getUserHandler);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, cans_list);
-                    history.setAdapter(adapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.i(TAG, "Can't get the list of users: " + statusCode + " - " + String.valueOf(errorResponse));
-            }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.i(TAG, "Can't get the list of users: " + statusCode + " - " + String.valueOf(errorResponse));
+                    }
 
+                });
+            }
         });
     }
 }

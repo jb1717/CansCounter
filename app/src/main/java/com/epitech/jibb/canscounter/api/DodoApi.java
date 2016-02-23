@@ -16,7 +16,6 @@ public class DodoApi {
     }
 
     public static void getUser(String userid, JsonHttpResponseHandler callback) {
-        Log.i("DODOAPI", userid);
         _client.get(_url + "user/" + userid, callback);
     }
 
@@ -26,7 +25,7 @@ public class DodoApi {
         _client.post(_url + "user", params, callback);
     }
 
-    public static void addOneCan(int userid, JsonHttpResponseHandler callback) {
-        _client.post(_url + "cans/" + String.valueOf(userid), callback);
+    public static void addOneCan(String userid, JsonHttpResponseHandler callback) {
+        _client.post(_url + "cans/" + userid, callback);
     }
 }
